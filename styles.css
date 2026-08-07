@@ -1,0 +1,108 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: #111827;
+  color: #e5e7eb;
+  line-height: 1.5;
+}
+header {
+  padding: 32px 24px 16px;
+  background: #1f2937;
+  border-bottom: 1px solid #374151;
+}
+header h1 {
+  margin: 0 0 8px;
+  font-size: 2rem;
+}
+header p {
+  margin: 0;
+  color: #9ca3af;
+}
+main {
+  padding: 24px;
+  display: grid;
+  gap: 24px;
+}
+.card {
+  background: #111827;
+  border: 1px solid #374151;
+  border-radius: 18px;
+  padding: 20px;
+}
+.card h2 {
+  margin-top: 0;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+button {
+  border: none;
+  background: #2563eb;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+button:hover {
+  background: #1d4ed8;
+}
+.info-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.info-block {
+  background: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 16px;
+  padding: 14px 16px;
+  min-width: 170px;
+}
+.info-block strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #f9fafb;
+}
+.plot-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+.plot-row > div {
+  flex: 1 1 320px;
+}
+canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  border: 1px solid #374151;
+  background: #0f172a;
+}
+.tokens-list {
+  margin-top: 16px;
+}
+.tokens-list pre,
+details pre {
+  background: #0f172a;
+  color: #d1d5db;
+  padding: 14px;
+  border-radius: 14px;
+  overflow-x: auto;
+}
+footer {
+  padding: 16px 24px 32px;
+  color: #9ca3af;
+}
+@media (max-width: 840px) {
+  .plot-row {
+    flex-direction: column;
+  }
+}
