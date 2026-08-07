@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S1-3 · Embeddings learn similarity</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      <div>
+        <h1>S1-3 · Embeddings learn similarity from next-token</h1>
+        <p>Next-token prediction alone clusters related tokens in embedding space.</p>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Back to overview</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section id="s1-3" class="card">
+      <p>Train a tiny next-token model on synthetic grammar and project the token embeddings to 2D.</p>
+      <div class="controls">
+        <button id="s13-train">Train embedding model</button>
+      </div>
+      <div class="info-row">
+        <div class="info-block">
+          <strong>Train loss</strong>
+          <div id="s13-loss">—</div>
+        </div>
+      </div>
+      <div class="plot-row">
+        <div>
+          <h3>Embedding projection</h3>
+          <canvas id="s13-embeddings-canvas" width="520" height="520"></canvas>
+        </div>
+      </div>
+      <div class="tokens-list">
+        <h3>Nearest neighbors</h3>
+        <pre id="s13-neighbors">—</pre>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>Static demo for Netlify deployment.</p>
+  </footer>
+  <script src="main.js"></script>
+</body>
+</html>

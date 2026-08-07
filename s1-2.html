@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S1-2 · Depth without nonlinearity is a lie</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      <div>
+        <h1>S1-2 · Depth without nonlinearity is a lie</h1>
+        <p>Five linear layers collapse into one effective matrix; ReLU breaks the collapse.</p>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Back to overview</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section id="s1-2" class="card">
+      <p>Train 1 linear layer, 5 linear layers, and 5 layers with ReLUs. Compare boundaries and the collapsed matrix.</p>
+      <div class="controls">
+        <button id="s12-generate">Generate data</button>
+        <button id="s12-train">Train all models</button>
+      </div>
+      <div class="info-row">
+        <div class="info-block">
+          <strong>1-layer accuracy</strong>
+          <div id="s12-one-acc">—</div>
+        </div>
+        <div class="info-block">
+          <strong>5 linear-layer accuracy</strong>
+          <div id="s12-five-acc">—</div>
+        </div>
+        <div class="info-block">
+          <strong>5-layer ReLU accuracy</strong>
+          <div id="s12-five-relu-acc">—</div>
+        </div>
+      </div>
+      <div class="plot-row">
+        <div>
+          <h3>1-layer boundary</h3>
+          <canvas id="s12-one-canvas" width="280" height="280"></canvas>
+        </div>
+        <div>
+          <h3>5 linear-layer boundary</h3>
+          <canvas id="s12-five-canvas" width="280" height="280"></canvas>
+        </div>
+        <div>
+          <h3>5-layer ReLU boundary</h3>
+          <canvas id="s12-five-relu-canvas" width="280" height="280"></canvas>
+        </div>
+      </div>
+      <details>
+        <summary>Effective matrix from 5-layer linear product</summary>
+        <pre id="s12-matrix-output">—</pre>
+      </details>
+    </section>
+  </main>
+  <footer>
+    <p>Static demo for Netlify deployment.</p>
+  </footer>
+  <script src="main.js"></script>
+</body>
+</html>

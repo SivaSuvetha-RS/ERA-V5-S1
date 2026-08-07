@@ -8,14 +8,47 @@
 </head>
 <body>
   <header>
-    <h1>ERA V5 S1: Activation and Generalization Demos</h1>
-    <p>Interactive HTML/JS proofs for ring classification, depth, embeddings, and memorization.</p>
+    <div class="header-top">
+      <div>
+        <h1>ERA V5 S1: Four small demos for big neural-network ideas.</h1>
+        <p>Click a topic to jump to the live solution. Each section keeps the visual proof front and center.</p>
+      </div>
+      <nav class="nav-links">
+        <a href="#s1-1">Activations</a>
+        <a href="#s1-2">Depth</a>
+        <a href="#s1-3">Embeddings</a>
+        <a href="#s1-4">Data</a>
+      </nav>
+    </div>
+    <div class="summary-grid">
+      <a class="summary-card" href="#s1-1">
+        <span class="summary-tag">S1-1</span>
+        <h2>Activations exist for a reason</h2>
+        <p>Linear boundaries fail on rings; ReLU bends the boundary.</p>
+      </a>
+      <a class="summary-card" href="#s1-2">
+        <span class="summary-tag">S1-2</span>
+        <h2>Depth without nonlinearity is a lie</h2>
+        <p>Five linear layers collapse into one effective matrix.</p>
+      </a>
+      <a class="summary-card" href="#s1-3">
+        <span class="summary-tag">S1-3</span>
+        <h2>Embeddings learn similarity</h2>
+        <p>Next-token prediction alone clusters related tokens.</p>
+      </a>
+      <a class="summary-card" href="#s1-4">
+        <span class="summary-tag">S1-4</span>
+        <h2>Data closes the gap</h2>
+        <p>Train-test gap shrinks as dataset size grows.</p>
+      </a>
+    </div>
   </header>
 
   <main>
     <section id="s1-1" class="card">
       <h2>S1-1 · Activations exist for a reason</h2>
       <p>Compare a linear model vs. a one-hidden-layer ReLU model on a noisy ring dataset.</p>
+      <a class="standalone-link" href="s1-1.html">Open standalone</a>
       <div class="controls">
         <button id="s11-generate">Generate data</button>
         <button id="s11-train">Train both models</button>
@@ -44,7 +77,8 @@
 
     <section id="s1-2" class="card">
       <h2>S1-2 · Depth without nonlinearity is a lie</h2>
-      <p>Train 1 linear layer, 5 linear layers, and 5 layers with ReLUs. Compare boundaries and effective matrix.</p>
+      <p>Train 1 linear layer, 5 linear layers, and 5 layers with ReLUs. Compare boundaries and the collapsed effective matrix.</p>
+      <a class="standalone-link" href="s1-2.html">Open standalone</a>
       <div class="controls">
         <button id="s12-generate">Generate data</button>
         <button id="s12-train">Train all models</button>
@@ -86,6 +120,7 @@
     <section id="s1-3" class="card">
       <h2>S1-3 · Embeddings learn similarity from next-token</h2>
       <p>Train a tiny next-token model on synthetic grammar and project learned embeddings.</p>
+      <a class="standalone-link" href="s1-3.html">Open standalone</a>
       <div class="controls">
         <button id="s13-train">Train embedding model</button>
       </div>
@@ -109,7 +144,8 @@
 
     <section id="s1-4" class="card">
       <h2>S1-4 · Memorization vs generalization</h2>
-      <p>Train an over-parameterized net on dataset sizes 20, 200, 2000 and plot the train/test gap.</p>
+      <p>Train an over-parameterized net on dataset sizes 20, 200, 2000 and plot the train/test loss gap.</p>
+      <a class="standalone-link" href="s1-4.html">Open standalone</a>
       <div class="controls">
         <button id="s14-train">Run generalization experiment</button>
       </div>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S1-4 · Memorization vs generalization</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      <div>
+        <h1>S1-4 · Memorization vs generalization</h1>
+        <p>A high-capacity model can memorize tiny data; more data closes the gap.</p>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Back to overview</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section id="s1-4" class="card">
+      <p>Train an over-parameterized net on dataset sizes 20, 200, 2000 and compare train/test loss.</p>
+      <div class="controls">
+        <button id="s14-train">Run generalization experiment</button>
+      </div>
+      <div class="info-row">
+        <div class="info-block">
+          <strong>Results</strong>
+          <div id="s14-summary">—</div>
+        </div>
+      </div>
+      <div class="plot-row">
+        <div>
+          <h3>Loss comparison</h3>
+          <canvas id="s14-gap-canvas" width="620" height="320"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>Static demo for Netlify deployment.</p>
+  </footer>
+  <script src="main.js"></script>
+</body>
+</html>

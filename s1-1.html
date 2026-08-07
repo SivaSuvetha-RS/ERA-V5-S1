@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>S1-1 · Activations exist for a reason</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      <div>
+        <h1>S1-1 · Activations exist for a reason</h1>
+        <p>Linear boundaries fail on rings; ReLU bends the boundary.</p>
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Back to overview</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+    <section id="s1-1" class="card">
+      <p>Compare a linear model vs. a one-hidden-layer ReLU model on a noisy ring dataset.</p>
+      <div class="controls">
+        <button id="s11-generate">Generate data</button>
+        <button id="s11-train">Train both models</button>
+      </div>
+      <div class="info-row">
+        <div class="info-block">
+          <strong>Linear model accuracy</strong>
+          <div id="s11-linear-acc">—</div>
+        </div>
+        <div class="info-block">
+          <strong>ReLU model accuracy</strong>
+          <div id="s11-relu-acc">—</div>
+        </div>
+      </div>
+      <div class="plot-row">
+        <div>
+          <h3>Linear boundary</h3>
+          <canvas id="s11-linear-canvas" width="320" height="320"></canvas>
+        </div>
+        <div>
+          <h3>ReLU boundary</h3>
+          <canvas id="s11-relu-canvas" width="320" height="320"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>Static demo for Netlify deployment.</p>
+  </footer>
+  <script src="main.js"></script>
+</body>
+</html>

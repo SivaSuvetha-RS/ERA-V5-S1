@@ -359,6 +359,7 @@ function drawBoundary(canvas, model, data) {
 function setupS11() {
   const generateButton = document.getElementById('s11-generate');
   const trainButton = document.getElementById('s11-train');
+  if (!generateButton || !trainButton) return;
   let s11Data;
   let linearModel;
   let reluModel;
@@ -388,6 +389,7 @@ function setupS11() {
 function setupS12() {
   const generateButton = document.getElementById('s12-generate');
   const trainButton = document.getElementById('s12-train');
+  if (!generateButton || !trainButton) return;
   let s12Data;
   let oneModel;
   let fiveModel;
@@ -577,6 +579,7 @@ function nearestNeighbors(embeddings, vocab) {
 
 function setupS13() {
   const trainButton = document.getElementById('s13-train');
+  if (!trainButton) return;
   const { vocab, pairs, categories } = buildLanguagePairs();
   const model = new EmbeddingNextTokenModel(vocab.length, 10);
   trainButton.addEventListener('click', () => {
@@ -673,8 +676,18 @@ function makeVector(length, init) {
   return new Array(length).fill(init);
 }
 
+function evaluateLoss(model, data) {
+  let total = 0;
+  data.forEach(({ x, label }) => {
+    const p = model.predict(x);
+    total += crossEntropy([1 - p, p], label);
+  });
+  return total / data.length;
+}
+
 function setupS14() {
   const trainButton = document.getElementById('s14-train');
+  if (!trainButton) return;
   trainButton.addEventListener('click', () => {
     rng.set(5678);
     const sizes = [20, 200, 2000];
@@ -686,11 +699,11 @@ function setupS14() {
       const testData = allData.slice(split);
       const model = new OverfitBinaryModel(64);
       model.train(trainData, 900, 0.04);
-      const trainAcc = evaluateAccuracy(model, trainData);
-      const testAcc = evaluateAccuracy(model, testData);
-      results.push({ size, trainAcc, testAcc });
+      const trainLoss = evaluateLoss(model, trainData);
+      const testLoss = evaluateLoss(model, testData);
+      results.push({ size, trainLoss, testLoss, gap: testLoss - trainLoss });
     });
-    const summary = results.map(r => `N=${r.size}: train ${(r.trainAcc * 100).toFixed(1)}%, test ${(r.testAcc * 100).toFixed(1)}%`).join(' | ');
+    const summary = results.map(r => `N=${r.size}: train ${r.trainLoss.toFixed(3)}, test ${r.testLoss.toFixed(3)}, gap ${r.gap.toFixed(3)}`).join(' | ');
     document.getElementById('s14-summary').textContent = summary;
     drawGapPlot(document.getElementById('s14-gap-canvas'), results);
   });
@@ -698,13 +711,13 @@ function setupS14() {
 
 function drawGapPlot(canvas, results) {
   const ctx = canvas.getContext('2d');
+  if (!canvas || results.length === 0) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   const padding = 50;
   const widths = canvas.width - padding * 2;
   const heights = canvas.height - padding * 2;
   const xs = results.map((_, i) => padding + (i + 0.5) * (widths / results.length));
-  const gaps = results.map(r => r.trainAcc - r.testAcc);
-  const maxGap = Math.max(...gaps.map(g => Math.abs(g)), 0.1);
+  const maxLoss = Math.max(...results.flatMap(r => [r.trainLoss, r.testLoss]));
   ctx.strokeStyle = '#9ca3af';
   ctx.lineWidth = 1;
   ctx.setLineDash([4, 4]);
@@ -719,32 +732,35 @@ function drawGapPlot(canvas, results) {
   ctx.setLineDash([]);
   ctx.fillStyle = '#ffffff';
   ctx.font = '14px Inter, sans-serif';
-  ctx.fillText('Generalization gap (train − test)', padding, padding - 12);
+  ctx.fillText('Train/test loss vs dataset size', padding, padding - 12);
   results.forEach((res, i) => {
     const x = xs[i];
-    const yTrain = canvas.height - padding - (res.trainAcc * heights);
-    const yTest = canvas.height - padding - (res.testAcc * heights);
+    const yTrain = canvas.height - padding - (res.trainLoss / maxLoss) * heights;
+    const yTest = canvas.height - padding - (res.testLoss / maxLoss) * heights;
     ctx.strokeStyle = '#38bdf8';
     ctx.fillStyle = '#38bdf8';
     ctx.beginPath();
-    ctx.arc(x - 10, yTrain, 6, 0, Math.PI * 2);
+    ctx.arc(x - 12, yTrain, 6, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillText('train', x - 25, yTrain - 10);
+    ctx.fillText('train', x - 32, yTrain - 10);
     ctx.strokeStyle = '#fb7185';
     ctx.fillStyle = '#fb7185';
     ctx.beginPath();
-    ctx.arc(x + 10, yTest, 6, 0, Math.PI * 2);
+    ctx.arc(x + 12, yTest, 6, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillText('test', x + 15, yTest - 10);
+    ctx.fillText('test', x + 22, yTest - 10);
     ctx.strokeStyle = '#facc15';
     ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(x - 10, yTrain);
-    ctx.lineTo(x + 10, yTest);
+    ctx.moveTo(x - 12, yTrain);
+    ctx.lineTo(x + 12, yTest);
     ctx.stroke();
     ctx.fillStyle = '#d1d5db';
     ctx.fillText(`N=${res.size}`, x, canvas.height - padding + 20);
   });
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = '12px Inter, sans-serif';
+  ctx.fillText('loss', 12, padding + 4);
 }
 
 window.addEventListener('load', () => {
