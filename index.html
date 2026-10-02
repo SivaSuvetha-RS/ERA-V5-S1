@@ -96,19 +96,19 @@
 
     <section id="s1-2" class="card">
       <h2>S1-2 · Depth without nonlinearity is a lie</h2>
-      <p>Train 1 linear layer, 5 linear layers, and 5 layers with ReLUs. Compare boundaries and the collapsed effective matrix.</p>
+      <p>Train a 5-layer linear network, then collapse its full affine map into an exactly equivalent single layer. The 5-layer ReLU network trains separately to show how nonlinearities change the boundary.</p>
       <a class="standalone-link" href="s1-2.html">Open standalone</a>
       <div class="controls">
         <button id="s12-generate">Generate data</button>
-        <button id="s12-train">Train all models</button>
+        <button id="s12-train">Train both 5-layer models</button>
       </div>
       <div class="info-row">
         <div class="info-block">
-          <strong>1-layer accuracy</strong>
+          <strong>Collapsed 1-layer accuracy</strong>
           <div id="s12-one-acc">—</div>
         </div>
         <div class="info-block">
-          <strong>5 linear-layer accuracy</strong>
+          <strong>5-layer linear accuracy</strong>
           <div id="s12-five-acc">—</div>
         </div>
         <div class="info-block">
@@ -118,11 +118,11 @@
       </div>
       <div class="plot-row">
         <div>
-          <h3>1-layer boundary</h3>
+          <h3>Collapsed 1-layer boundary</h3>
           <canvas id="s12-one-canvas" width="280" height="280"></canvas>
         </div>
         <div>
-          <h3>5 linear-layer boundary</h3>
+          <h3>5-layer linear boundary</h3>
           <canvas id="s12-five-canvas" width="280" height="280"></canvas>
         </div>
         <div>
@@ -131,7 +131,7 @@
         </div>
       </div>
       <details>
-        <summary>Effective matrix from 5-layer linear product</summary>
+        <summary>Five-layer matrix product and collapsed classifier</summary>
         <pre id="s12-matrix-output">—</pre>
       </details>
     </section>

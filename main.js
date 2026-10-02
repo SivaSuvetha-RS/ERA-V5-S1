@@ -243,6 +243,16 @@ class StackedLinearBinaryModel {
     }
     return { W, b };
   }
+  effectiveClassifier() {
+    const { W, b } = this.effectiveMatrix();
+    return {
+      w: [
+        this.outW[0] * W[0][0] + this.outW[1] * W[1][0],
+        this.outW[0] * W[0][1] + this.outW[1] * W[1][1]
+      ],
+      b: this.outW[0] * b[0] + this.outW[1] * b[1] + this.outB
+    };
+  }
 }
 
 class ReLUStackedBinaryModel {
@@ -420,6 +430,9 @@ function setupS12() {
     oneModel = new LinearBinaryModel();
     fiveModel = new StackedLinearBinaryModel(5);
     fiveReluModel = new ReLUStackedBinaryModel(5, 8);
+    const collapsed = fiveModel.effectiveClassifier();
+    oneModel.w = collapsed.w;
+    oneModel.b = collapsed.b;
     document.getElementById('s12-one-acc').textContent = '—';
     document.getElementById('s12-five-acc').textContent = '—';
     document.getElementById('s12-five-relu-acc').textContent = '—';
@@ -430,9 +443,11 @@ function setupS12() {
   });
   trainButton.addEventListener('click', () => {
     if (!s12Data) generateButton.click();
-    oneModel.train(s12Data, 1200, 0.08);
     fiveModel.train(s12Data, 1200, 0.035);
     fiveReluModel.train(s12Data, 1200, 0.032);
+    const collapsed = fiveModel.effectiveClassifier();
+    oneModel.w = collapsed.w;
+    oneModel.b = collapsed.b;
     document.getElementById('s12-one-acc').textContent = `${(evaluateAccuracy(oneModel, s12Data) * 100).toFixed(1)}%`;
     document.getElementById('s12-five-acc').textContent = `${(evaluateAccuracy(fiveModel, s12Data) * 100).toFixed(1)}%`;
     document.getElementById('s12-five-relu-acc').textContent = `${(evaluateAccuracy(fiveReluModel, s12Data) * 100).toFixed(1)}%`;
@@ -440,7 +455,10 @@ function setupS12() {
     drawBoundary(document.getElementById('s12-five-canvas'), fiveModel, s12Data);
     drawBoundary(document.getElementById('s12-five-relu-canvas'), fiveReluModel, s12Data);
     const effective = fiveModel.effectiveMatrix();
-    document.getElementById('s12-matrix-output').textContent = `Effective W:\n[${effective.W[0].map(v => v.toFixed(4)).join(', ')}]\n[${effective.W[1].map(v => v.toFixed(4)).join(', ')}]\nb: [${effective.b.map(v => v.toFixed(4)).join(', ')}]`;
+    const classifier = fiveModel.effectiveClassifier();
+    const maxDifference = Math.max(...s12Data.map(({ x }) => Math.abs(oneModel.predict(x) - fiveModel.predict(x))));
+    const classifierEquation = `sigmoid(${classifier.w[0].toFixed(4)} * x1 + ${classifier.w[1].toFixed(4)} * x2 + ${classifier.b.toFixed(4)})`;
+    document.getElementById('s12-matrix-output').textContent = `Product of five 2x2 weight matrices:\n[${effective.W[0].map(v => v.toFixed(4)).join(', ')}]\n[${effective.W[1].map(v => v.toFixed(4)).join(', ')}]\nProduct bias: [${effective.b.map(v => v.toFixed(4)).join(', ')}]\n\nCollapsed classifier: ${classifierEquation}\nMax probability difference on data: ${maxDifference.toExponential(2)}`;
   });
 }
 
