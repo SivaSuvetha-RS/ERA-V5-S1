@@ -45,33 +45,52 @@
   </header>
 
   <main>
-    <section id="s1-1" class="card">
-      <h2>S1-1 · Activations exist for a reason</h2>
-      <p>Compare a linear model vs. a one-hidden-layer ReLU model on a noisy ring dataset.</p>
+    <section id="s1-1" class="card s11-demo">
+      <div class="s11-intro">
+        <span class="s11-kicker">S1-1 · The activation experiment</span>
+        <h2>One straight line. One boundary that bends.</h2>
+        <p>Both models see the same 300 noisy points. Without an activation, the boundary stays linear; ReLU lets it wrap around the inner ring.</p>
+      </div>
       <a class="standalone-link" href="s1-1.html">Open standalone</a>
-      <div class="controls">
-        <button id="s11-generate">Generate data</button>
-        <button id="s11-train">Train both models</button>
-      </div>
-      <div class="info-row">
-        <div class="info-block">
-          <strong>Linear model accuracy</strong>
-          <div id="s11-linear-acc">—</div>
+      <div class="s11-toolbar">
+        <div class="controls">
+          <button id="s11-generate" class="s11-secondary">New rings</button>
+          <button id="s11-train">Train both models</button>
         </div>
-        <div class="info-block">
-          <strong>ReLU model accuracy</strong>
-          <div id="s11-relu-acc">—</div>
+        <div class="s11-legend" aria-label="Point legend">
+          <span><i class="s11-dot s11-inner"></i>Class 0 · inner ring</span>
+          <span><i class="s11-dot s11-outer"></i>Class 1 · outer ring</span>
         </div>
       </div>
-      <div class="plot-row">
-        <div>
-          <h3>Linear boundary</h3>
-          <canvas id="s11-linear-canvas" width="320" height="320"></canvas>
-        </div>
-        <div>
-          <h3>ReLU boundary</h3>
-          <canvas id="s11-relu-canvas" width="320" height="320"></canvas>
-        </div>
+      <div class="s11-plots">
+        <article class="s11-plot">
+          <div class="s11-plot-heading">
+            <div>
+              <span class="s11-model-type">No activation</span>
+              <h3>Linear model</h3>
+            </div>
+            <div class="s11-score">
+              <span>Training accuracy</span>
+              <div class="s11-accuracy" id="s11-linear-acc" aria-live="polite">—</div>
+            </div>
+          </div>
+          <canvas id="s11-linear-canvas" width="420" height="420" aria-label="Linear model decision boundary on the ring dataset"></canvas>
+          <p class="s11-caption">A single straight boundary cannot separate concentric rings.</p>
+        </article>
+        <article class="s11-plot s11-plot-relu">
+          <div class="s11-plot-heading">
+            <div>
+              <span class="s11-model-type">One hidden layer · ReLU</span>
+              <h3>Nonlinear model</h3>
+            </div>
+            <div class="s11-score">
+              <span>Training accuracy</span>
+              <div class="s11-accuracy" id="s11-relu-acc" aria-live="polite">—</div>
+            </div>
+          </div>
+          <canvas id="s11-relu-canvas" width="420" height="420" aria-label="ReLU model decision boundary wrapping around the ring dataset"></canvas>
+          <p class="s11-caption">ReLU combines straight segments into a boundary around the ring.</p>
+        </article>
       </div>
     </section>
 

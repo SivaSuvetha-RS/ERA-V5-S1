@@ -331,26 +331,37 @@ function drawBoundary(canvas, model, data) {
   const imageData = ctx.createImageData(width, height);
   for (let j = 0; j < height; j++) {
     for (let i = 0; i < width; i++) {
-      const x = (i / (width - 1)) * 4 - 2;
-      const y = (1 - j / (height - 1)) * 4 - 2;
+      const x = (i / (width - 1)) * 6 - 3;
+      const y = (1 - j / (height - 1)) * 6 - 3;
       const p = model.predict([x, y]);
       const idx = (j * width + i) * 4;
-      const color = p > 0.5 ? [62, 161, 222] : [214, 46, 77];
+      const color = Math.abs(p - 0.5) < 0.01
+        ? [24, 36, 44]
+        : p > 0.5 ? [190, 235, 223] : [248, 218, 218];
       imageData.data[idx] = color[0];
       imageData.data[idx + 1] = color[1];
       imageData.data[idx + 2] = color[2];
-      imageData.data[idx + 3] = 220;
+      imageData.data[idx + 3] = 255;
     }
   }
   ctx.putImageData(imageData, 0, 0);
+  ctx.strokeStyle = 'rgba(24, 36, 44, 0.2)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(width / 2, 0);
+  ctx.lineTo(width / 2, height);
+  ctx.moveTo(0, height / 2);
+  ctx.lineTo(width, height / 2);
+  ctx.stroke();
   data.forEach(({ x, label }) => {
-    const px = ((x[0] + 2) / 4) * width;
-    const py = ((2 - x[1]) / 4) * height;
+    const px = ((x[0] + 3) / 6) * width;
+    const py = ((3 - x[1]) / 6) * height;
+    if (px < 0 || px > width || py < 0 || py > height) return;
     ctx.beginPath();
-    ctx.arc(px, py, 4, 0, Math.PI * 2);
-    ctx.fillStyle = label === 1 ? '#ffffff' : '#111827';
+    ctx.arc(px, py, 4.5, 0, Math.PI * 2);
+    ctx.fillStyle = label === 1 ? '#087f70' : '#b33f50';
     ctx.fill();
-    ctx.strokeStyle = label === 1 ? '#115eab' : '#dc2626';
+    ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 1.5;
     ctx.stroke();
   });
@@ -363,18 +374,21 @@ function setupS11() {
   let s11Data;
   let linearModel;
   let reluModel;
-  generateButton.addEventListener('click', () => {
-    rng.set(321);
+  let nextSeed = 321;
+  function generateData(render = true) {
+    rng.set(nextSeed++);
     s11Data = generateRingData(300, 0.9, 2.0, 0.25);
     document.getElementById('s11-linear-acc').textContent = '—';
     document.getElementById('s11-relu-acc').textContent = '—';
     linearModel = new LinearBinaryModel();
     reluModel = new ReLUBinaryModel(16);
-    drawBoundary(document.getElementById('s11-linear-canvas'), linearModel, s11Data);
-    drawBoundary(document.getElementById('s11-relu-canvas'), reluModel, s11Data);
-  });
-  trainButton.addEventListener('click', () => {
-    if (!s11Data) generateButton.click();
+    if (render) {
+      drawBoundary(document.getElementById('s11-linear-canvas'), linearModel, s11Data);
+      drawBoundary(document.getElementById('s11-relu-canvas'), reluModel, s11Data);
+    }
+  }
+  function trainModels() {
+    if (!s11Data) generateData();
     linearModel.train(s11Data, 1200, 0.08);
     reluModel.train(s11Data, 1200, 0.045);
     const linAcc = evaluateAccuracy(linearModel, s11Data);
@@ -383,7 +397,11 @@ function setupS11() {
     document.getElementById('s11-relu-acc').textContent = `${(relAcc * 100).toFixed(1)}%`;
     drawBoundary(document.getElementById('s11-linear-canvas'), linearModel, s11Data);
     drawBoundary(document.getElementById('s11-relu-canvas'), reluModel, s11Data);
-  });
+  }
+  generateButton.addEventListener('click', () => generateData());
+  trainButton.addEventListener('click', trainModels);
+  generateData(false);
+  trainModels();
 }
 
 function setupS12() {
