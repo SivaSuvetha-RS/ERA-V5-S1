@@ -92,18 +92,20 @@ class LinearBinaryModel {
   }
 }
 
-class ReLUBinaryModel {
-  constructor(hiddenUnits = 16) {
+class OneHiddenLayerBinaryModel {
+  constructor(hiddenUnits = 16, useRelu = true, initialModel = null) {
     this.hidden = hiddenUnits;
-    this.W1 = makeMatrix(hiddenUnits, 2, () => rng.value(-0.8, 0.8));
-    this.b1 = zeros(hiddenUnits);
-    this.W2 = new Array(hiddenUnits).fill(0).map(() => rng.value(-1, 1));
-    this.b2 = rng.value(-0.5, 0.5);
+    this.useRelu = useRelu;
+    this.W1 = initialModel ? initialModel.W1.map(row => row.slice()) : makeMatrix(hiddenUnits, 2, () => rng.value(-0.8, 0.8));
+    this.b1 = initialModel ? initialModel.b1.slice() : zeros(hiddenUnits);
+    this.W2 = initialModel ? initialModel.W2.slice() : new Array(hiddenUnits).fill(0).map(() => rng.value(-1, 1));
+    this.b2 = initialModel ? initialModel.b2 : rng.value(-0.5, 0.5);
   }
   predict(x) {
     const h = new Array(this.hidden);
     for (let i = 0; i < this.hidden; i++) {
-      h[i] = relu(this.W1[i][0] * x[0] + this.W1[i][1] * x[1] + this.b1[i]);
+      const z = this.W1[i][0] * x[0] + this.W1[i][1] * x[1] + this.b1[i];
+      h[i] = this.useRelu ? relu(z) : z;
     }
     return sigmoid(dot(this.W2, h) + this.b2);
   }
@@ -118,7 +120,7 @@ class ReLUBinaryModel {
         const h = new Array(this.hidden);
         for (let i = 0; i < this.hidden; i++) {
           z1[i] = this.W1[i][0] * x[0] + this.W1[i][1] * x[1] + this.b1[i];
-          h[i] = relu(z1[i]);
+          h[i] = this.useRelu ? relu(z1[i]) : z1[i];
         }
         const z2 = dot(this.W2, h) + this.b2;
         const p = sigmoid(z2);
@@ -128,7 +130,7 @@ class ReLUBinaryModel {
         }
         gb2 += err;
         for (let i = 0; i < this.hidden; i++) {
-          const grad = err * this.W2[i] * drelu(z1[i]);
+          const grad = err * this.W2[i] * (this.useRelu ? drelu(z1[i]) : 1);
           gW1[i][0] += grad * x[0];
           gW1[i][1] += grad * x[1];
           gb1[i] += grad;
@@ -380,8 +382,8 @@ function setupS11() {
     s11Data = generateRingData(300, 0.9, 2.0, 0.25);
     document.getElementById('s11-linear-acc').textContent = '—';
     document.getElementById('s11-relu-acc').textContent = '—';
-    linearModel = new LinearBinaryModel();
-    reluModel = new ReLUBinaryModel(16);
+    reluModel = new OneHiddenLayerBinaryModel(16);
+    linearModel = new OneHiddenLayerBinaryModel(16, false, reluModel);
     if (render) {
       drawBoundary(document.getElementById('s11-linear-canvas'), linearModel, s11Data);
       drawBoundary(document.getElementById('s11-relu-canvas'), reluModel, s11Data);
@@ -389,7 +391,7 @@ function setupS11() {
   }
   function trainModels() {
     if (!s11Data) generateData();
-    linearModel.train(s11Data, 1200, 0.08);
+    linearModel.train(s11Data, 1200, 0.045);
     reluModel.train(s11Data, 1200, 0.045);
     const linAcc = evaluateAccuracy(linearModel, s11Data);
     const relAcc = evaluateAccuracy(reluModel, s11Data);
